@@ -1,0 +1,10 @@
+{
+  "name": "sigereth",
+  "version": "1.0.0",
+  "description": "Combat tracker for Exalted 3rd edition",
+  "main": "src/index.tsx",
+  "repository": "https://github.com/autochthonia/sigereth",
+  "author": "strass",
+  "license": "MIT",
+  "private": true
+}
