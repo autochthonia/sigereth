@@ -6,5 +6,11 @@
   "repository": "https://github.com/autochthonia/sigereth",
   "author": "strass",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@types/react": "^16.4.11",
+    "@types/react-dom": "^16.0.7",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
+  }
 }
