@@ -17,9 +17,26 @@ export interface Message {
   body: string;
 }
 
+export enum IntimacyType {
+  tie = 'TIE',
+  principle = 'PRINCIPLE',
+}
+export enum IntimacyLevel {
+  minor = 'MINOR',
+  major = 'MAJOR',
+  defining = 'DEFINING',
+}
+
+export interface Intimacy {
+  label: string;
+  type: IntimacyType;
+  level: IntimacyLevel;
+}
+
 export type Character = FullCharacter | QuickCharacter;
 
 export interface FullCharacter {
+  characterType: 'FullCharacter';
   name: string;
   attributes: { [A in Attribute]: number };
   abilities: { [A in Ability]: number };
@@ -35,10 +52,10 @@ export interface FullCharacter {
   limitTrigger: string;
   essence: number;
   motes: {
-    personalTemporary: number;
-    peripheralTemporary: number;
-    personalPermanent: number;
-    peripheralPermanent: number;
+    personalCurrent: number;
+    peripheralCurrent: number;
+    personalTotal: number;
+    peripheralTotal: number;
   };
   experience: {
     regularCurrent: number;
@@ -48,11 +65,47 @@ export interface FullCharacter {
   };
   weapons: Weapon[];
   armor: Armor[];
+  health: {
+    healthLevels: { [L in HealthLevels]: number };
+    damageBashing: { [L in HealthLevels]: number };
+    damageLethal: { [L in HealthLevels]: number };
+    damageAggravated: { [L in HealthLevels]: number };
+  };
+  intimacies: Intimacy[];
 }
 
 export interface QuickCharacter {
-    name: string;
-    
+  characterType: 'QuickCharacter';
+  name: string;
+  essence: number;
+  willpower: {
+    permanent: number;
+    temporary: number;
+  };
+  motes: {
+    personalCurrent: number;
+    peripheralCurrent: number;
+    personalTotal: number;
+    peripheralTotal: number;
+  };
+  health: {
+    healthLevels: { [L in HealthLevels]: number };
+    damageBashing: { [L in HealthLevels]: number };
+    damageLethal: { [L in HealthLevels]: number };
+    damageAggravated: { [L in HealthLevels]: number };
+  };
+  evasion: number;
+  parry: number;
+  resolve: number;
+  guile: number;
+  soak: number;
+  hardness: number;
+  intimacies: Intimacy[];
+  actions: string[];
+  attacks: string[];
+  combatMovement: number;
+  joinBattle: number;
+  //   speedBonus
 }
 
 enum EquipmentType {
@@ -78,10 +131,10 @@ export interface Weapon {
 }
 
 export interface Armor {
-    name: string;
-    category: EquipmentCategory;
-    mobilityPenalty: number;
-    tags: string[];
+  name: string;
+  category: EquipmentCategory;
+  mobilityPenalty: number;
+  tags: string[];
 }
 
 export enum Attribute {
@@ -139,3 +192,5 @@ export enum Ability {
 }
 
 export const ABILITIES = Object.keys(Ability) as Ability[];
+
+export type HealthLevels = 0 | -1 | -2 | -4 | 'I';
