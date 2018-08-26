@@ -4,11 +4,11 @@ type d10 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 interface RollConfig {
   dice: number;
-  autosuccesses: number;
-  targetNumber: d10;
-  double: d10[];
-  reroll: d10[];
-  cascade: boolean;
+  autosuccesses?: number;
+  targetNumber?: d10;
+  double?: d10[];
+  reroll?: d10[];
+  cascade?: boolean;
 }
 
 interface RollResult {
@@ -17,6 +17,7 @@ interface RollResult {
   diceRolled: number;
   rerolls: DiceRoll[];
   result: DiceRoll;
+  botch: boolean;
 }
 
 type DiceRoll = d10[];
@@ -26,29 +27,43 @@ export default class Roll {
   static rollDice = (numDice: RollConfig['dice']) => times(numDice, Roll.d10);
   static rerollDice: (
     roll: DiceRoll,
-    { reroll, cascade }: { reroll: RollConfig['reroll']; cascade: RollConfig['cascade'] },
+    { reroll, cascade }: { reroll: RollConfig['reroll']; cascade?: RollConfig['cascade'] },
   ) => DiceRoll[] = (roll, { reroll = [], cascade = true }) => {
     const rerolls = compact(roll.map(r => (reroll.includes(r) ? Roll.d10() : false)));
-    return [rerolls, ...(cascade ? Roll.rerollDice(rerolls, { reroll, cascade }) : [])];
+    return [
+      ...(rerolls.length > 0 ? [rerolls] : []),
+      ...(cascade && rerolls.length > 0 ? Roll.rerollDice(rerolls, { reroll, cascade }) : []),
+    ];
   };
   static countSuccesses = (
     roll: DiceRoll,
-    targetNumber: RollConfig['targetNumber'] = 7,
-    double: RollConfig['double'] = [10],
-    autosuccesses: RollConfig['autosuccesses'] = 0,
-  ) => roll.reduce((result, die) => (result + die > targetNumber ? (double.includes(die) ? 2 : 1) : 0), autosuccesses);
+    {
+      targetNumber = 7,
+      double = [10],
+      autosuccesses = 0,
+    }: {
+      targetNumber?: RollConfig['targetNumber'];
+      double?: RollConfig['double'];
+      autosuccesses?: RollConfig['autosuccesses'];
+    } = {},
+  ) =>
+    roll.reduce(
+      (result, die) => result + (die >= targetNumber ? (double.includes(die) ? 2 : 1) : 0),
+      autosuccesses,
+    );
   static roll: (config: RollConfig) => RollResult = config => {
     const { dice, autosuccesses, targetNumber, double, reroll, cascade } = config;
     const roll = Roll.rollDice(dice);
     const rerolls = Roll.rerollDice(roll, { reroll, cascade });
     const result = [...roll, ...flatten(rerolls)];
-    const successes = Roll.countSuccesses(roll, targetNumber, double, autosuccesses);
+    const successes = Roll.countSuccesses(roll, { targetNumber, double, autosuccesses });
     return {
       config,
       successes,
       result,
       rerolls,
       diceRolled: result.length,
+      botch: successes === 0 && result.includes(1),
     };
   };
   config: RollConfig;
