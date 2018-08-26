@@ -114,6 +114,31 @@ const Experience = ({
   </Flex>
 );
 
+const Weapons = ({ weapons }: { weapons: Character['weapons'] }) => (
+  <Flex>
+    <SmallCaps>Weapons</SmallCaps>
+    <FlexUl>
+      {weapons.map(w => (
+        <FlexLi>
+          {w.name}: {w.accuracy}, {w.damage}, {w.defense} {w.overwhelming} {w.tags}
+        </FlexLi>
+      ))}
+    </FlexUl>
+  </Flex>
+);
+const Armor = ({ armor }: { armor: Character['armor'] }) => (
+  <Flex>
+    <SmallCaps>Weapons</SmallCaps>
+    <FlexUl>
+      {armor.map(a => (
+        <FlexLi>
+          {a.name} {a.category} {a.mobilityPenalty} {a.tags}
+        </FlexLi>
+      ))}
+    </FlexUl>
+  </Flex>
+);
+
 const Character = (character: Character) => (
   <Flex>
     <Flex>Name: {character.name}</Flex>
@@ -127,6 +152,8 @@ const Character = (character: Character) => (
     <LimitBreak limit={character.limit} />
     <LimitTrigger limitTrigger={character.limitTrigger} />
     <Experience experience={character.experience} />
+    <Weapons weapons={character.weapons} />
+    <Armor armor={character.armor} />
   </Flex>
 );
 
