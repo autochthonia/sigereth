@@ -17,7 +17,9 @@ export interface Message {
   body: string;
 }
 
-export interface Character {
+export type Character = FullCharacter | QuickCharacter;
+
+export interface FullCharacter {
   name: string;
   attributes: { [A in Attribute]: number };
   abilities: { [A in Ability]: number };
@@ -45,13 +47,19 @@ export interface Character {
     solarTotal: number;
   };
   weapons: Weapon[];
+  armor: Armor[];
 }
 
-enum WeaponType {
+export interface QuickCharacter {
+    name: string;
+    
+}
+
+enum EquipmentType {
   mortal = 'MORTAL',
   artifact = 'ARTIFACT',
 }
-enum WeaponCategory {
+enum EquipmentCategory {
   light,
   medium,
   heavy,
@@ -59,13 +67,21 @@ enum WeaponCategory {
 
 export interface Weapon {
   name: string;
-  type: WeaponType;
-  category: WeaponCategory;
+  type: EquipmentType;
+  category: EquipmentCategory;
   accuracy: number;
   damage: number;
   defense: number;
   overwhelming: number;
   tags: string[];
+  combatAbility: Ability;
+}
+
+export interface Armor {
+    name: string;
+    category: EquipmentCategory;
+    mobilityPenalty: number;
+    tags: string[];
 }
 
 export enum Attribute {
