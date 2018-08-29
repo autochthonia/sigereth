@@ -5,6 +5,7 @@ const convert = require('koa-connect');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const htmlPlugin = new HtmlWebPackPlugin({
   template: './src/index.html',
@@ -12,8 +13,11 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 const dashboardPlugin = new DashboardPlugin();
 const bundleAnalyzerPlugin = new BundleAnalyzerPlugin({
-  analyzerMode: 'server',
-  openAnalyzer: true,
+  analyzerMode: 'static',
+  openAnalyzer: false,
+});
+const tsConfigPathsPlugin = new TsconfigPathsPlugin({
+  /*configFile: "./path/to/tsconfig.json" */
 });
 
 module.exports = {
@@ -42,8 +46,22 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '*': './src',
+    },
+    plugins: [tsConfigPathsPlugin],
   },
   devtool: 'source-map',
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000,
+    open: true,
+    overlay: true,
+    historyApiFallback: {
+      historyApiFallback: true,
+    },
+  },
   plugins: [htmlPlugin, dashboardPlugin, bundleAnalyzerPlugin],
 };
 
