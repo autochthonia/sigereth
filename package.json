@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --hot --progress"
+    "start": "webpack-dev-server --hot --progress --mode development",
   },
   "dependencies": {
     "@hocs/with-lifecycle": "^0.5.0",
