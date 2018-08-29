@@ -1,22 +1,3 @@
-import firebase from 'firebase';
-
-export interface Combatant {
-  name: string;
-  initiative: number;
-  turnOver: boolean;
-  evasion: number;
-  parry: number;
-  onslaught: number;
-  willpower: number;
-  woundPenalty: number;
-  character?: firebase.firestore.DocumentReference;
-}
-
-export interface Message {
-  createdAt: Date;
-  body: string;
-}
-
 export enum IntimacyType {
   tie = 'TIE',
   principle = 'PRINCIPLE',

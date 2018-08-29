@@ -1,4 +1,4 @@
-import { HealthLevels, Character, FullCharacter, QuickCharacter } from '.';
+import { HealthLevels, Character } from 'types/Character';
 import { ceil, max } from 'lodash';
 
 export interface DerivedStats {
@@ -21,11 +21,14 @@ export interface DerivedStats {
   mobilityPenalty: number;
 }
 
+// @ts-ignore
 export const getDerivedStats: (character: Character) => DerivedStats = character => {
   switch (character.characterType) {
     case 'FullCharacter': {
       const { attributes, abilities, weapons } = character;
-      const weaponDefenses = weapons.map(w => ceil((attributes.DEXTERITY + abilities[w.combatAbility]) / 2));
+      const weaponDefenses = weapons.map(w =>
+        ceil((attributes.DEXTERITY + abilities[w.combatAbility]) / 2),
+      );
       const unarmedDefenses = [abilities['MARTIAL ARTS'], abilities.BRAWL].map(ability =>
         ceil((attributes.DEXTERITY + ability) / 2),
       );
@@ -63,15 +66,14 @@ export const getDerivedStats: (character: Character) => DerivedStats = character
       return {
         joinBattle: character.joinBattle,
         rush: character.combatMovement,
-        disengage: character.combatMovement
-        featsOfStrength: character.actions.featsOfStrength,
+        disengage: character.combatMovement,
         parry: character.parry,
         evasion: character.evasion,
         resolve: character.resolve,
         guile: character.guile,
         motes: {
-            personalTotal: character.motes.personalTotal,
-            peripheralTotal: character.motes.peripheralTotal,
+          personalTotal: character.motes.personalTotal,
+          peripheralTotal: character.motes.peripheralTotal,
         },
         totalSoak: character.soak,
         totalHardness: character.hardness,
