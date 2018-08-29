@@ -19,7 +19,7 @@ const GameContainer = compose<{}, StoreConnect & WithRouter>(
       },
     }: StoreConnect & WithRouter) {
       this.unsubscribe = store.actions.subscribe((firestore, getState, setState) => {
-        firestore.doc(`games/${gameId}`).onSnapshot(snap => {
+        return firestore.doc(`games/${gameId}`).onSnapshot(snap => {
           const state = getState();
           setState({
             ...state,
