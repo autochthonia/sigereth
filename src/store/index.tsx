@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { store as firestore } from 'services/firestation';
 import { Game } from 'types/Game';
 import { Document } from 'types/Firestation';
+import { User } from 'types/User';
+import firebase from 'firebase';
 
 export interface StoreState {
   refs: {
@@ -12,24 +14,28 @@ export interface StoreState {
     mainRef: React.RefObject<HTMLElement>;
     footerRef: React.RefObject<HTMLElement>;
   };
+  auth: firebase.auth.UserCredential;
   actions: {
     subscribe?: (
       callback: (
         store: firebase.firestore.Firestore,
         getState: () => StoreState,
         setState: (state: StoreState, sideEffect?: Function) => void,
-      ) => void,
-    ) => void;
+      ) => () => void,
+    ) => () => void;
+    login?: () => Promise<void>;
+    logout?: () => Promise<void>;
   };
   games: {
     [gameId: string]: Document<Game>;
   };
+  user: User;
 }
 interface StoreProps {
   children: JSX.Element;
 }
 
-const initialState: StoreState = {
+export const initialState: StoreState = {
   refs: {
     bodyRef: React.createRef<HTMLElement>(),
     modalRef: React.createRef<HTMLElement>(),
@@ -37,8 +43,10 @@ const initialState: StoreState = {
     mainRef: React.createRef<HTMLElement>(),
     footerRef: React.createRef<HTMLElement>(),
   },
+  auth: null,
   actions: {},
   games: {},
+  user: {},
 };
 
 const { Provider, Consumer } = React.createContext(initialState);
@@ -56,14 +64,60 @@ export default class Store extends Component<StoreProps, StoreState> {
       actions: {
         ...initialState.actions,
         subscribe: this.subscribe,
+        login: this.login,
+        logout: this.logout,
       },
     };
   }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log('onAuthStateChanged - logged in');
+        return this.setState({
+          ...this.state,
+          auth: {
+            ...this.state.auth,
+            user,
+          },
+        });
+      }
+      console.log('onAuthStateChanged - `logged out');
+      return this.setState({
+        ...this.state,
+        auth: null,
+      });
+    });
+  }
+
+  login = () =>
+    firebase
+      .auth()
+      .signInAnonymously()
+      .then(auth =>
+        this.setState({
+          ...this.state,
+          auth,
+        }),
+      );
+
+  logout = () =>
+    firebase
+      .auth()
+      .signOut()
+      .then(() =>
+        this.setState({
+          ...this.state,
+          auth: null,
+          user: null,
+        }),
+      );
 
   subscribe: StoreState['actions']['subscribe'] = callback =>
     callback(firestore, () => ({ ...this.state }), this.setState.bind(this));
 
   render() {
+    console.debug(this.state);
     return <Store.Provider value={this.state}>{this.props.children}</Store.Provider>;
   }
 }
@@ -71,6 +125,6 @@ export default class Store extends Component<StoreProps, StoreState> {
 export interface StoreConnect {
   store: StoreState;
 }
-export const connectStore = () => (WrappedComponent: React.ComponentClass<StoreConnect>) => (
+export const connectStore = () => (WrappedComponent: React.ComponentType<StoreConnect>) => (
   props: object,
 ) => <Store.Consumer>{store => <WrappedComponent store={store} {...props} />}</Store.Consumer>;
