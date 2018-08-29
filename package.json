@@ -7,18 +7,25 @@
   "author": "strass",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "start": "webpack-dev-server --hot --progress"
+  },
   "dependencies": {
+    "@hocs/with-lifecycle": "^0.5.0",
     "@types/firebase": "^3.2.1",
     "@types/lodash": "^4.14.116",
     "@types/react": "^16.4.11",
     "@types/react-dom": "^16.0.7",
+    "@types/recompose": "^0.26.4",
     "emotion": "^9.2.6",
     "firebase": "^5.4.1",
+    "found": "^0.3.14",
     "jest-babel": "^1.0.1",
     "lodash": "^4.17.10",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-emotion": "^9.2.6"
+    "react-emotion": "^9.2.6",
+    "recompose": "^0.29.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-rc.3",
@@ -37,13 +44,27 @@
     "@babel/plugin-proposal-throw-expressions": "^7.0.0-rc.3",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0-rc.3",
     "@babel/plugin-syntax-import-meta": "^7.0.0-rc.3",
+    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0-rc.3",
     "@babel/preset-react": "^7.0.0-rc.3",
     "@types/jest": "^23.3.1",
+    "analyzer": "^1.2.1",
+    "awesome-typescript-loader": "^5.2.0",
     "babel-core": "^7.0.0-0",
     "babel-jest": "^23.4.2",
+    "babel-loader": "^8.0.0",
+    "html-webpack-plugin": "^3.2.0",
     "jest": "^23.5.0",
+    "koa-connect": "^2.0.1",
+    "source-map-loader": "^0.2.4",
     "ts-jest": "^23.1.4",
-    "typescript": "^3.0.1"
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "typescript": "^3.0.1",
+    "webpack": "^4.17.1",
+    "webpack-bundle": "^0.6.2",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dashboard": "^2.0.0",
+    "webpack-dev-server": "^3.1.6"
   }
 }
