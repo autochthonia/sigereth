@@ -1,13 +1,13 @@
 import React from 'react';
 import Flex, { FlexUl, FlexLi } from 'atoms/Flex';
-import { Character, ABILITIES, ATTRIBUTE_GROUPS } from 'types';
+import { FullCharacter as TFullCharacter, ABILITIES, ATTRIBUTE_GROUPS } from 'types/Character';
 import styled from 'react-emotion';
 import { map } from 'lodash';
 import Dotscale from 'atoms/Dotscale';
 
 const SmallCaps = styled.span({ fontVariant: 'small-caps' });
 
-const Attributes = ({ attributes }: { attributes: Character['attributes'] }) => (
+const Attributes = ({ attributes }: { attributes: TFullCharacter['attributes'] }) => (
   <Flex flexDirection="column">
     <Flex>Attributes</Flex>
     <Flex>
@@ -25,7 +25,7 @@ const Attributes = ({ attributes }: { attributes: Character['attributes'] }) => 
     </Flex>
   </Flex>
 );
-const Abilities = ({ abilities }: { abilities: Character['abilities'] }) => (
+const Abilities = ({ abilities }: { abilities: TFullCharacter['abilities'] }) => (
   <Flex flexDirection="column">
     <Flex>Attributes</Flex>
     <Flex flexDirection="column">
@@ -38,7 +38,7 @@ const Abilities = ({ abilities }: { abilities: Character['abilities'] }) => (
     </Flex>
   </Flex>
 );
-const Specialties = ({ specialties }: { specialties: Character['specialties'] }) => (
+const Specialties = ({ specialties }: { specialties: TFullCharacter['specialties'] }) => (
   <Flex>
     <SmallCaps>Specialties</SmallCaps>
     <FlexUl>
@@ -51,7 +51,7 @@ const Specialties = ({ specialties }: { specialties: Character['specialties'] })
   </Flex>
 );
 
-const Merits = ({ merits }: { merits: Character['merits'] }) => (
+const Merits = ({ merits }: { merits: TFullCharacter['merits'] }) => (
   <Flex>
     {map(merits, (dots, label) => (
       <Flex key={label}>
@@ -65,7 +65,7 @@ const Merits = ({ merits }: { merits: Character['merits'] }) => (
 const Willpower = ({
   willpower: { permanent: permanentWillpower, temporary: temporaryWillpower },
 }: {
-  willpower: Character['willpower'];
+  willpower: TFullCharacter['willpower'];
 }) => (
   <Flex flexDirection="column">
     <SmallCaps>Willpower</SmallCaps>
@@ -74,13 +74,13 @@ const Willpower = ({
   </Flex>
 );
 
-const LimitBreak = ({ limit }: { limit: Character['limit'] }) => (
+const LimitBreak = ({ limit }: { limit: TFullCharacter['limit'] }) => (
   <Flex flexDirection="column">
     <SmallCaps>Limit Break</SmallCaps>
     <Dotscale value={limit} scale={10} />
   </Flex>
 );
-const LimitTrigger = ({ limitTrigger }: { limitTrigger: Character['limitTrigger'] }) => (
+const LimitTrigger = ({ limitTrigger }: { limitTrigger: TFullCharacter['limitTrigger'] }) => (
   <Flex flexDirection="column">
     <SmallCaps>Limit Break</SmallCaps>
     {limitTrigger}
@@ -90,7 +90,7 @@ const LimitTrigger = ({ limitTrigger }: { limitTrigger: Character['limitTrigger'
 const Experience = ({
   experience: { regularTotal = 0, solarTotal = 0, regularCurrent = 0, solarCurrent = 0 },
 }: {
-  experience: Character['experience'];
+  experience: TFullCharacter['experience'];
 }) => (
   <Flex>
     <Flex flexDirection="column">
@@ -114,7 +114,7 @@ const Experience = ({
   </Flex>
 );
 
-const Weapons = ({ weapons }: { weapons: Character['weapons'] }) => (
+const Weapons = ({ weapons }: { weapons: TFullCharacter['weapons'] }) => (
   <Flex>
     <SmallCaps>Weapons</SmallCaps>
     <FlexUl>
@@ -126,7 +126,7 @@ const Weapons = ({ weapons }: { weapons: Character['weapons'] }) => (
     </FlexUl>
   </Flex>
 );
-const Armor = ({ armor }: { armor: Character['armor'] }) => (
+const Armor = ({ armor }: { armor: TFullCharacter['armor'] }) => (
   <Flex>
     <SmallCaps>Weapons</SmallCaps>
     <FlexUl>
@@ -139,7 +139,7 @@ const Armor = ({ armor }: { armor: Character['armor'] }) => (
   </Flex>
 );
 
-const Character = (character: Character) => (
+const FullCharacter = (character: TFullCharacter) => (
   <Flex>
     <Flex>Name: {character.name}</Flex>
     <Flex>
@@ -157,4 +157,4 @@ const Character = (character: Character) => (
   </Flex>
 );
 
-export default Character;
+export default FullCharacter;
