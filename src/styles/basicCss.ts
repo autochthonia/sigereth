@@ -1,5 +1,3 @@
-import { Interpolation, Themed } from 'react-emotion';
-
 export default ({
   height,
   width,
