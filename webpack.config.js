@@ -21,7 +21,6 @@ const tsConfigPathsPlugin = new TsconfigPathsPlugin({
 });
 
 module.exports = {
-  mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'main.js',
