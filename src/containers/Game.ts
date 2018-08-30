@@ -1,48 +1,35 @@
-import { compose, branch, withProps, renderComponent } from 'recompose';
-import { orderBy } from 'lodash';
+import { compose, branch, withProps, renderComponent, mapProps } from 'recompose';
+import { orderBy, head } from 'lodash';
 import Game from 'pages/Game';
 // @ts-ignore
-import withLifecycle from '@hocs/with-lifecycle';
 import { connectStore, StoreConnect } from 'store';
+// @ts-ignore
 import { WithRouter, withRouter } from 'found';
-import { Game as TGame } from 'types/Game';
 import Loading from 'atoms/Loading';
+import { getGame } from 'store/selectors';
 
-const GameContainer = compose<{}, StoreConnect & WithRouter>(
+const GameContainer = compose(
   connectStore(),
-  withRouter,
-  withLifecycle({
-    onWillMount({
-      store,
-      match: {
-        params: { gameId },
-      },
-    }: StoreConnect & WithRouter) {
-      this.unsubscribe = store.actions.subscribe((firestore, getState, setState) => {
-        return firestore.doc(`games/${gameId}`).onSnapshot(snap => {
-          const state = getState();
-          setState({
-            ...state,
-            games: {
-              ...state.games,
-              [gameId]: {
-                ...snap,
-                data: snap.data() as TGame,
-              },
-            },
-          });
-        });
-      });
-    },
-    onWillUnmount() {
-      this.unsubscribe();
-    },
+  // withRouter,
+  withProps(({ store, match }: StoreConnect & WithRouter) => {
+    console.log('test');
+    const game = getGame(store, { match });
+    const loading = !(game && game.exists);
+    const gameData = !loading && game && game.data;
+    const orderedCombatants =
+      !loading && orderBy(gameData.combat.combatants, ['initiative'], ['desc']);
+    console.log(`loading status: ${loading ? 'loading' : 'ready'}`);
+
+    return {
+      game: !loading && game.data,
+      orderedCombatants,
+      loading,
+      combat: !loading && gameData.combat,
+      activeCombatant: !loading && head(orderedCombatants),
+    };
   }),
-  withProps(({ store: { games }, match: { params: { gameId } } }: StoreConnect & WithRouter) => ({
-    orderedCombatants: orderBy(games[gameId].data.combat.combatants, ['initiative'], ['desc']),
-    loading: !games[gameId].exists,
-  })),
-  branch(() => false, renderComponent(Loading)),
+  branch(({ loading }) => loading, renderComponent(Loading)),
+  mapProps(({ router, match, store, loading, ...props }) => ({ ...props })),
 )(Game);
 
 export default GameContainer;

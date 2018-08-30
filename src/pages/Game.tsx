@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { SFC } from 'react';
 import Flex from 'atoms/Flex';
 import CombatantList from 'organisms/CombatantList';
 import { Game } from 'types/Game';
 import { Combat, Combatant } from 'types/Combat';
-import { StoreConnect } from 'store';
 
 interface GameHeaderProps {
   name: Game['name'];
@@ -27,8 +26,9 @@ type GameProps = {
   combat: Combat;
   orderedCombatants: Combatant[];
   activeCombatant: Combatant;
-} & StoreConnect;
-const Game = ({ orderedCombatants, activeCombatant, game, combat }: GameProps) => (
+};
+
+const Game: SFC<GameProps> = ({ orderedCombatants, activeCombatant, game, combat }) => (
   <Flex>
     <GameHeader name={game.name} />
     <CombatInfo activeCombatant={activeCombatant} turn={combat.turn} />
