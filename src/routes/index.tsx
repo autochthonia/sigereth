@@ -9,10 +9,9 @@ import {
 import firebase from 'firebase';
 import Login from 'pages/Login';
 import Loading from 'atoms/Loading';
-import { userSubscription } from 'store/Subscriptions';
+import { UserSubscription, GameSubscription } from 'store/Subscriptions';
 import HeaderContainer from 'containers/Header';
-// import { renderComponent } from 'recompose';
-// import DashboardContainer from 'containers/Dashboard';
+import RenderChildren from 'atoms/RenderChildren';
 
 const Layout: SFC = ({ children }) => (
   <div>
@@ -26,6 +25,7 @@ const LandingPage: SFC = () => <div>Landing Page</div>;
 class AsyncRoute extends Route {
   // @ts-ignore
   render({ Component, props }: RouteRenderArgs) {
+    console.log('Async route initiated. Loading status: ', Component && props ? 'done' : 'loading');
     return Component && props ? <Component {...props} /> : <Loading />;
   }
 }
@@ -36,20 +36,24 @@ const routeConfig = makeRouteConfig(
     <Route path="/" Component={LandingPage} />
     <Route path="login" Component={Login} />
     <Route
-      Component={userSubscription(({ children }: { children: React.ReactChildren }) => children)}
+      Component={RenderChildren}
       render={({ Component, ...props }) => {
         if (!firebase.auth().currentUser) throw new RedirectException('/login');
         return Component && props ? <Component {...props} /> : <Loading />;
       }}
     >
-      <TransformAsyncRoute
-        path="dashboard"
-        getComponent={async () => (await import('../containers/Dashboard')).default}
-      />
-      <Route
-        path="games/:gameId"
-        getComponent={async () => (await import('../containers/Game')).default}
-      />
+      <Route Component={UserSubscription}>
+        <TransformAsyncRoute
+          path="dashboard"
+          getComponent={async () => (await import('../containers/Dashboard')).default}
+        />
+        <Route Component={GameSubscription}>
+          <TransformAsyncRoute
+            path="games/:gameId"
+            getComponent={async () => (await import('../containers/Game')).default}
+            />
+        </Route>
+      </Route>
     </Route>
   </Route>,
 );
