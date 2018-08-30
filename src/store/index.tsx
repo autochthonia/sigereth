@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { store as firestore } from 'services/firestation';
 import { Game } from 'types/Game';
-import { Document } from 'types/Firestation';
+import { DocumentSnapshotExpanded, QuerySnapshotExpanded } from 'types/Firestation';
 import { User } from 'types/User';
 import firebase from 'firebase';
 
@@ -26,10 +26,8 @@ export interface StoreState {
     login?: () => Promise<void>;
     logout?: () => Promise<void>;
   };
-  games: {
-    [gameId: string]: Document<Game>;
-  };
-  user: User;
+  games: QuerySnapshotExpanded<Game>;
+  user: DocumentSnapshotExpanded<User>;
 }
 interface StoreProps {
   children: JSX.Element;
@@ -44,9 +42,9 @@ export const initialState: StoreState = {
     footerRef: React.createRef<HTMLElement>(),
   },
   auth: null,
-  actions: {},
-  games: {},
-  user: {},
+  actions: null,
+  games: null,
+  user: null,
 };
 
 const { Provider, Consumer } = React.createContext(initialState);
