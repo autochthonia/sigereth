@@ -7,8 +7,8 @@ import {
 } from 'types/Firestation';
 
 export const expandDocumentSnapshot: (
-  snap: DocumentSnapshot | QueryDocumentSnapshot,
-) => DocumentSnapshotExpanded = snap => ({
+  snap: DocumentSnapshot<any> | QueryDocumentSnapshot<any>,
+) => DocumentSnapshotExpanded<any> = snap => ({
   exists: snap.exists,
   ref: snap.ref,
   id: snap.id,
@@ -16,9 +16,11 @@ export const expandDocumentSnapshot: (
   data: snap.data(),
 });
 
-export const expandQuerySnapshot: (snap: QuerySnapshot) => QuerySnapshotExpanded = snap => {
+export const expandQuerySnapshot: (
+  snap: QuerySnapshot<any>,
+) => QuerySnapshotExpanded<any> = snap => {
   const docs: {
-    [docId: string]: DocumentSnapshotExpanded;
+    [docId: string]: DocumentSnapshotExpanded<any>;
   } = {};
   snap.docs.forEach(doc => {
     docs[doc.id] = expandDocumentSnapshot(doc);

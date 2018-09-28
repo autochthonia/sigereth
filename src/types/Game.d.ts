@@ -1,15 +1,31 @@
 import { Combat } from './Combat';
 import { Character } from './Character';
+import { Collection, DocumentReference } from './Firestation';
+import { User } from './User';
 
 export interface Message {
   createdAt: Date;
   body: string;
 }
 
+export enum EventType {
+  roll = 'ROLL',
+}
+
+export interface Event {
+  type: EventType;
+}
+
+export enum UserRole {
+  owner = 'OWNER',
+  player = 'PLAYER',
+}
+
 export interface Game {
   name: string;
-  owner: firebase.firestore.DocumentReference;
-  players: firebase.firestore.DocumentReference[];
+  users: Collection<{ user: DocumentReference<User>; role: UserRole }>;
   combat: Combat;
-  characters: Character[];
+  characters: Collection<Character>;
+  messages: Collection<Message>;
+  events: Collection<Event>;
 }
