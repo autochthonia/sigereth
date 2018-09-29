@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { SFC } from 'react';
 import { WithRouter } from 'found';
 import { compose } from 'recompose';
 import { connectStore, StoreConnect } from 'store';
 
-const Login = ({
+const Login: SFC<WithRouter & StoreConnect> = ({
   router,
   store: {
     actions: { login },
   },
-}: WithRouter & StoreConnect) => (
+}) => (
   <div>
     <button onClick={() => login().then(() => router.push('/dashboard'))}>log in</button>
   </div>
