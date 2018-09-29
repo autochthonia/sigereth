@@ -24,7 +24,7 @@ export enum UserRole {
 export interface Game {
   name: string;
   users: Collection<{ user: DocumentReference<User>; role: UserRole }>;
-  combat: Combat;
+  combats: Collection<Combat>;
   characters: Collection<Character>;
   messages: Collection<Message>;
   events: Collection<Event>;
