@@ -20,5 +20,6 @@
     "ts-jest": {
       "useBabelrc": true
     }
-  }
+  },
+  "snapshotSerializers": ["enzyme-to-json/serializer"]
 }
