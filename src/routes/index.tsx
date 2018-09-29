@@ -3,15 +3,15 @@ import {
   createBrowserRouter,
   makeRouteConfig,
   Route,
-  RedirectException,
   RouteRenderArgs,
+  WithRouter,
 } from 'found';
 import firebase from 'firebase';
 import Login from 'pages/Login';
-import Loading from 'atoms/Loading';
-import { UserSubscription, GameSubscription } from 'store/Subscriptions';
+import { UserSubscription } from 'store/Subscriptions';
 import HeaderContainer from 'containers/Header';
-import RenderChildren from 'atoms/RenderChildren';
+import SmartLoader from 'atoms/SmartLoader';
+import WaitForFirebaseAuth from 'services/WaitForFirebaseAuth';
 
 const Layout: SFC = ({ children }) => (
   <div>
@@ -26,32 +26,34 @@ class AsyncRoute extends Route {
   // @ts-ignore
   render({ Component, props }: RouteRenderArgs) {
     console.log('Async route initiated. Loading status: ', Component && props ? 'done' : 'loading');
-    return Component && props ? <Component {...props} /> : <Loading />;
+    return Component && props ? <Component {...props} /> : <SmartLoader />;
   }
 }
 const TransformAsyncRoute = AsyncRoute as any;
 
+const ProtectedRouteRedirect: SFC<WithRouter> = ({ children, router }) => {
+  if (!firebase.auth().currentUser) {
+    console.debug('User is not currently signed in, redirecting to login page.');
+    router.replace('/login');
+  }
+  return <React.Fragment>{children}</React.Fragment>;
+};
+
 const routeConfig = makeRouteConfig(
-  <Route path="/" Component={Layout}>
-    <Route path="/" Component={LandingPage} />
-    <Route path="login" Component={Login} />
-    <Route
-      Component={RenderChildren}
-      render={({ Component, ...props }) => {
-        if (!firebase.auth().currentUser) throw new RedirectException('/login');
-        return Component && props ? <Component {...props} /> : <Loading />;
-      }}
-    >
-      <Route Component={UserSubscription}>
-        <TransformAsyncRoute
-          path="dashboard"
-          getComponent={async () => (await import('../containers/Dashboard')).default}
-        />
-        <Route Component={GameSubscription}>
+  <Route path="/" Component={WaitForFirebaseAuth}>
+    <Route path="/" Component={Layout}>
+      <Route path="/" Component={LandingPage} />
+      <Route path="login" Component={Login} />
+      <Route Component={ProtectedRouteRedirect}>
+        <Route Component={UserSubscription}>
+          <TransformAsyncRoute
+            path="dashboard"
+            getComponent={async () => (await import('../containers/Dashboard')).default}
+          />
           <TransformAsyncRoute
             path="games/:gameId"
             getComponent={async () => (await import('../containers/Game')).default}
-            />
+          />
         </Route>
       </Route>
     </Route>
