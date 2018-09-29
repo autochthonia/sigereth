@@ -4,8 +4,9 @@ import { Collection, DocumentReference } from './Firestation';
 import { User } from './User';
 
 export interface Message {
-  createdAt: Date;
+  createdAt: Date | FieldValue;
   body: string;
+  sender: DocumentReference<User>;
 }
 
 export enum EventType {
