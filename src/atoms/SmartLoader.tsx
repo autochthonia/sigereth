@@ -15,7 +15,7 @@ class SmartLoader extends Component<
   static defaultProps: SmartLoaderProps & { children: ReactChildren } = {
     error: null,
     timeout: 0,
-    delay: 0,
+    delay: 200,
     loading: true,
     children: null,
   };
@@ -24,15 +24,15 @@ class SmartLoader extends Component<
   timeoutTimeout: NodeJS.Timer = null;
   componentDidMount() {
     if (this.props.delay >= 0) {
-      this.delayTimeout = setTimeout(() => {
+      this.delayTimeout = (setTimeout(() => {
         this.setState({ delayPassed: true });
-      }, this.props.delay);
+      }, this.props.delay) as unknown) as NodeJS.Timer;
     }
 
     if (this.props.timeout > 0) {
-      this.timeoutTimeout = setTimeout(() => {
+      this.timeoutTimeout = (setTimeout(() => {
         this.setState({ timeoutPassed: true });
-      }, this.props.timeout);
+      }, this.props.timeout) as unknown) as NodeJS.Timer;
     }
   }
   componentWillUnmount() {
