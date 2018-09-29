@@ -23,3 +23,6 @@ store.settings({ timestampsInSnapshots: true });
 export default firebase;
 
 console.error('remember to change firebase rules + remake keys');
+
+export const getUID = (): string | null =>
+  (firebase.auth().currentUser && firebase.auth().currentUser.uid) || null;
