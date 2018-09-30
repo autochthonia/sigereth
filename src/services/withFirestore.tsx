@@ -4,7 +4,7 @@ import {
   Query,
   CollectionReference,
   DocumentSnapshotExpanded,
-  QuerySnapshotExpanded
+  QuerySnapshotExpanded,
 } from 'types/Firestation';
 import { firestore } from 'firebase';
 import { pick, forEach, isEqual, isFunction, every } from 'lodash';
@@ -38,19 +38,13 @@ type FirestoreQueryableExpanded<
     ? FirestoreQueryableExpanded1<ReturnType<QE>>
     : unknown;
 
-type FirestoreQueryableExpanded1<
-  QE extends FirestoreQueryable<any>
-> = QE extends CollectionReference<infer DataType> | Query<infer DataType>
+type FirestoreQueryableExpanded1<QE extends FirestoreQueryable<any>> = QE extends
+  | CollectionReference<infer DataType>
+  | Query<infer DataType>
   ? QuerySnapshotExpanded<DataType>
-  : QE extends DocumentReference<infer DataType>
-    ? DocumentSnapshotExpanded<DataType>
-    : unknown;
+  : QE extends DocumentReference<infer DataType> ? DocumentSnapshotExpanded<DataType> : unknown;
 
-interface WithFirestoreConfig<
-  Props,
-  PL extends keyof Props,
-  Q extends QueryConfig<Props>
-> {
+interface WithFirestoreConfig<Props, PL extends keyof Props, Q extends QueryConfig<Props>> {
   /** Object containing the queries to be provided to WrappedComponent.
    * The queryName used is also the prop name the snapshot is passed in. */
   queries: Q;
@@ -66,10 +60,7 @@ interface WithFirestoreConfig<
   };
 }
 
-type WithFirestoreHoC = <Props>() => <
-  PL extends keyof Props,
-  Q extends QueryConfig<Props>
->(
+type WithFirestoreHoC = <Props>() => <PL extends keyof Props, Q extends QueryConfig<Props>>(
   config: WithFirestoreConfig<Props, PL, Q>,
 ) => (
   WrappedComponent: ComponentType<WithFirestore<Props, Q> & Pick<Props, PL>>,
@@ -93,9 +84,7 @@ const withFirestore: WithFirestoreHoC =
         { error: Error; queries: WithFirestore<Props, Q>; loaded: boolean }
       > {
         subscriptions: {
-          [queryName: string]: ReturnType<
-            FirestoreQueryable<any>['onSnapshot']
-          >;
+          [queryName: string]: ReturnType<FirestoreQueryable<any>['onSnapshot']>;
         } = {};
         state = {
           error: null as Error,
@@ -214,23 +203,13 @@ const withFirestore: WithFirestoreHoC =
         }
         render() {
           if (!this.state.loaded || this.state.error) {
-            return (
-              <SmartLoader
-                error={this.state.error}
-                timeout={timeout}
-                delay={delay}
-              />
-            );
+            return <SmartLoader error={this.state.error} timeout={timeout} delay={delay} />;
           }
 
-          const whitelistedProps = propPickList
-            ? pick(this.props, propPickList)
-            : this.props;
+          const whitelistedProps = propPickList ? pick(this.props, propPickList) : this.props;
           // Have to recast to any because I can't figure out the ts error
           const WrappedComponent2 = WrappedComponent as any;
-          return (
-            <WrappedComponent2 {...whitelistedProps} {...this.state.queries} />
-          );
+          return <WrappedComponent2 {...whitelistedProps} {...this.state.queries} />;
         }
       };
 
