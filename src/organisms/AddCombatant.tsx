@@ -1,6 +1,6 @@
 import Flex from 'atoms/Flex';
 import { toNumber } from 'lodash';
-import React, { SFC, FormEvent } from 'react';
+import React, { SFC, ChangeEvent } from 'react';
 import { Combatant } from 'types/Combat';
 import { DocumentReference } from 'types/Firestation';
 import { withStateHandlers } from 'recompose';
@@ -24,6 +24,8 @@ const AddCombatant: SFC<PAddCombatants & SAddCombatants & HAddCombatants> = ({
     onSubmit={e => {
       e.preventDefault();
       addCombatant({ name, initiative, turnOver: false });
+      setName({ target: { value: '' } });
+      setInitiative({ target: { value: 3 } });
     }}
   >
     <h3>Add Combatant</h3>
@@ -40,14 +42,20 @@ interface SAddCombatants {
   initiative: number;
 }
 type HAddCombatants = {
-  setName(e: FormEvent<HTMLInputElement>): Partial<SAddCombatants>;
-  setInitiative(e: FormEvent<HTMLInputElement>): Partial<SAddCombatants>;
+  setName(
+    e: ChangeEvent<HTMLInputElement> | { target: { value: string } },
+  ): Partial<SAddCombatants>;
+  setInitiative(
+    e: ChangeEvent<HTMLInputElement> | { target: { value: number } },
+  ): Partial<SAddCombatants>;
 };
 
 export default withStateHandlers<SAddCombatants, HAddCombatants, {}>(
   { name: '', initiative: 3 },
   {
-    setName: () => e => ({ name: e.target.value }),
-    setInitiative: () => e => ({ initiative: toNumber(e.target.value) }),
+    setName: () => (e: ChangeEvent<HTMLInputElement>) => ({ name: e.target.value }),
+    setInitiative: () => (e: ChangeEvent<HTMLInputElement>) => ({
+      initiative: toNumber(e.target.value),
+    }),
   },
 )(AddCombatant);
