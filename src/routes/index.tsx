@@ -1,17 +1,12 @@
 import React, { SFC } from 'react';
-import {
-  createBrowserRouter,
-  makeRouteConfig,
-  Route,
-  RouteRenderArgs,
-  WithRouter,
-} from 'found';
+import { createBrowserRouter, makeRouteConfig, Route, RouteRenderArgs, WithRouter } from 'found';
 import firebase from 'firebase';
 import Login from 'pages/Login';
 import { UserSubscription } from 'store/Subscriptions';
 import HeaderContainer from 'containers/Header';
 import SmartLoader from 'atoms/SmartLoader';
 import WaitForFirebaseAuth from 'services/WaitForFirebaseAuth';
+import LandingPage from 'pages/Landing';
 
 const Layout: SFC = ({ children }) => (
   <div>
@@ -20,7 +15,6 @@ const Layout: SFC = ({ children }) => (
     <footer>footer</footer>
   </div>
 );
-const LandingPage: SFC = () => <div>Landing Page</div>;
 
 class AsyncRoute extends Route {
   // @ts-ignore
@@ -49,6 +43,10 @@ const routeConfig = makeRouteConfig(
           <TransformAsyncRoute
             path="dashboard"
             getComponent={async () => (await import('../containers/Dashboard')).default}
+          />
+          <TransformAsyncRoute
+            path="games/new"
+            getComponent={async () => (await import('../containers/CreateGame')).default}
           />
           <TransformAsyncRoute
             path="games/:gameId"
