@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 import LabeledInput from 'molecules/LabeledInput';
 import Input from 'atoms/Input';
 import { firestore } from 'firebase';
-import { Game, Player, UserRole } from 'types/Game';
 import { getUID } from 'services/firestation';
+import { Combat } from 'types/Combat';
+import { WithRouter } from 'found';
 
 const Form = Flex.withComponent('form');
 
-class CreateGamePage extends Component {
+class CreateGamePage extends Component<WithRouter> {
   state = { gameName: '' };
 
   render() {
@@ -21,12 +22,25 @@ class CreateGamePage extends Component {
             e.preventDefault();
             const gameRef = await firestore()
               .collection('games')
-              .add({ name: this.state.gameName, turn: 0 } as Game);
-            gameRef.collection('players').add({
-              name: 'no player name yet',
-              role: UserRole.owner,
-              user: firestore().doc(`users/${getUID()}`),
-            } as Player);
+              .add(
+                { name: this.state.gameName, turn: 0 },
+                // as Game
+              );
+            await Promise.all([
+              gameRef.collection('players').add(
+                {
+                  name: 'no player name yet',
+                  role: 'OWNER',
+                  user: firestore().doc(`users/${getUID()}`),
+                },
+                // as Player
+              ),
+              gameRef
+                .collection('combats')
+                .doc(gameRef.id)
+                .set({ turn: 0 } as Combat),
+            ]);
+            this.props.router.push(`/games/${gameRef.id}`);
           }}
         >
           <LabeledInput
