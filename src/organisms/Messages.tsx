@@ -2,7 +2,7 @@ import Flex from 'atoms/Flex';
 import React, { SFC } from 'react';
 import { map } from 'lodash';
 import { QuerySnapshotExpanded } from 'types/Firestation';
-import { Message } from 'types/Game';
+import { Message, Player } from 'types/Game';
 import styled from 'react-emotion';
 import colors from 'styles/colors';
 import MessagesChatInput, { MessagesChatInputProps } from 'molecules/MessagesChatInput';
@@ -22,15 +22,20 @@ const Message = styled(Flex)<{ isUser: boolean }>(({ isUser = false }) => ({
 export interface PMessagesOrganism {
   messages: QuerySnapshotExpanded<Message>;
   sendMessage: MessagesChatInputProps['sendMessage'];
+  players: QuerySnapshotExpanded<Player>;
 }
 
-const MessagesOrganism: SFC<PMessagesOrganism> = ({ messages, sendMessage }) => (
+const MessagesOrganism: SFC<PMessagesOrganism> = ({ messages, sendMessage, players }) => (
   <MessagesWrapper flexDirection="column">
     <h1>Messages</h1>
     <Flex flexDirection="column" flexGrow={1}>
       {map(messages.docs, m => (
         <Message isUser={m.data.sender.isEqual(firestore().doc(`users/${getUID()}`))} key={m.id}>
-          {m.data.body}
+          {(players.docs &&
+            players.docs[m.data.sender.id] &&
+            players.docs[m.data.sender.id].data.name) ||
+            'unknown player'}
+          : {m.data.body}
         </Message>
       ))}
     </Flex>
