@@ -6,7 +6,7 @@ import { User } from './User';
 export interface Message {
   createdAt: Date | FieldValue;
   body: string;
-  sender: DocumentReference<User>;
+  sender: DocumentReference<User | Player>;
 }
 
 export enum EventType {
@@ -22,11 +22,17 @@ export enum UserRole {
   player = 'PLAYER',
 }
 
+export interface Player {
+  name: string;
+  user: DocumentReference<User>;
+  role: UserRole;
+}
+
 export interface Game {
   name: string;
-  users: Collection<{ user: DocumentReference<User>; role: UserRole }>;
-  combats: Collection<Combat>;
-  characters: Collection<Character>;
-  messages: Collection<Message>;
-  events: Collection<Event>;
+  players?: Collection<Player>;
+  combats?: Collection<Combat>;
+  characters?: Collection<Character>;
+  messages?: Collection<Message>;
+  events?: Collection<Event>;
 }

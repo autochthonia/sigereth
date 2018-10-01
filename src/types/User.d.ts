@@ -1,3 +1,5 @@
 import { auth } from 'firebase';
 
-export interface User {}
+export interface User {
+  username: string;
+}
