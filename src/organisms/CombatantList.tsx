@@ -2,17 +2,18 @@ import React from 'react';
 import { FlexOl, FlexLi } from 'atoms/Flex';
 import { Combatant as TCombatant } from 'types/Combat';
 import Combatant from './Combatant';
+import { DocumentSnapshotExpanded } from 'types/Firestation';
 
 export interface CombatantListProps {
-  combatants: TCombatant[];
-  activeCombatant: TCombatant;
+  combatants: DocumentSnapshotExpanded<TCombatant>[];
+  activeCombatant: DocumentSnapshotExpanded<TCombatant>;
 }
 
 const CombatantList = ({ combatants, activeCombatant }: CombatantListProps) => (
-  <FlexOl>
+  <FlexOl flexDirection="column">
     {combatants.map(c => (
-      <FlexLi>
-        <Combatant combatant={c} isActive={c === activeCombatant} />
+      <FlexLi key={c.id}>
+        <Combatant combatant={c} isActive={activeCombatant && c.id === activeCombatant.id} />
       </FlexLi>
     ))}
   </FlexOl>
