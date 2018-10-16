@@ -13,12 +13,7 @@ import AddCombatant from 'organisms/AddCombatant';
 import { PMessagesOrganism } from 'organisms/Messages';
 import { firestore } from 'firebase';
 import { getUID } from 'services/firestation';
-
-interface GameHeaderProps {
-  name: IGame['name'];
-}
-const Header = Flex.withComponent('header');
-const GameHeader = ({ name }: GameHeaderProps) => <Header>{name}</Header>;
+import GameHeader from 'organisms/GameHeader';
 
 interface CombatInfoProps {
   turn: Combat['turn'];
@@ -54,7 +49,7 @@ class Game extends Component<PGame> {
     const { orderedCombatants, activeCombatant, game, combat, players } = this.props;
     return (
       <Flex flexDirection="column">
-        <GameHeader name={game.data.name} />
+        <GameHeader gameName={game.data.name} />
         <Flex>
           <Flex flexDirection="column">
             <CombatInfo activeCombatant={activeCombatant} turn={combat.data.turn} />
