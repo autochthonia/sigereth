@@ -29,6 +29,7 @@
     "found": "^0.3.14",
     "jest-babel": "^1.0.1",
     "lodash": "^4.17.10",
+    "polished": "^2.2.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-emotion": "^9.2.6",
