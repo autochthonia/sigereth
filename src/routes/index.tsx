@@ -7,7 +7,10 @@ import HeaderContainer from 'containers/Header';
 import SmartLoader from 'atoms/SmartLoader';
 import WaitForFirebaseAuth from 'services/WaitForFirebaseAuth';
 import LandingPage from 'pages/Landing';
+import { injectGlobal } from 'emotion';
+import { normalize } from 'polished';
 
+injectGlobal(normalize());
 const Layout: SFC = ({ children }) => (
   <div>
     <HeaderContainer />
