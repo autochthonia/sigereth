@@ -23,13 +23,14 @@ export enum UserRole {
 }
 
 export interface Player {
-  name: string;
+  username: string;
   user: DocumentReference<User>;
   role: UserRole;
 }
 
 export interface Game {
   name: string;
+  owner: DocumentReference<Player>;
   players?: Collection<Player>;
   combats?: Collection<Combat>;
   characters?: Collection<Character>;
