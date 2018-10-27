@@ -51,14 +51,17 @@ class Game extends Component<PGame> {
       <Flex flexDirection="column">
         <GameHeader gameName={game.data.name} />
         <Flex>
-          <Flex flexDirection="column">
+          <Flex flexDirection="column" flexBasis="20%">
             <CombatInfo activeCombatant={activeCombatant} turn={combat.data.turn} />
             <CombatantList combatants={orderedCombatants} activeCombatant={activeCombatant} />
             <AddCombatant
               addCombatant={combatant => combat.ref.collection('combatants').add(combatant)}
             />
           </Flex>
-          <Flex>
+          <Flex flexDirection="column" flexBasis="60%">
+            as
+          </Flex>
+          <Flex flexBasis="20%" flexDirection="column">
             <MessagesContainer
               messages={this.messagesRef}
               sendMessage={this.sendMessage}

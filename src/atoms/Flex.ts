@@ -8,27 +8,18 @@ import listCss, { ListCss } from 'styles/listCss';
 import { StyledOtherComponent } from 'create-emotion-styled';
 import { DetailedHTMLProps, HTMLAttributes } from 'react';
 
-const Flex: StyledOtherComponent<
-  FlexCss & { [propName: string]: any },
-  DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+export type TFlex<TheElement = HTMLDivElement, ExtraCss = {}> = StyledOtherComponent<
+  FlexCss & ExtraCss & { [propName: string]: any },
+  DetailedHTMLProps<HTMLAttributes<TheElement>, TheElement>,
   any
-> = styled.div(resetCss, flexCss as any, basicCss, marginPaddingCss);
+>;
+
+const Flex: TFlex = styled.div(resetCss, flexCss as any, basicCss, marginPaddingCss);
 
 export default Flex;
-export const FlexUl: StyledOtherComponent<
-  FlexCss & ListCss & { [propName: string]: any },
-  DetailedHTMLProps<HTMLAttributes<HTMLUListElement>, HTMLUListElement>,
-  any
-> = styled(Flex)(listCss).withComponent('ul');
 
-export const FlexOl: StyledOtherComponent<
-  FlexCss & ListCss & { [propName: string]: any },
-  DetailedHTMLProps<HTMLAttributes<HTMLOListElement>, HTMLOListElement>,
-  any
-> = styled(Flex)(listCss).withComponent('ol');
+export const FlexUl: TFlex<HTMLUListElement, ListCss> = styled(Flex)(listCss).withComponent('ul');
 
-export const FlexLi: StyledOtherComponent<
-  FlexCss & ListCss & { [propName: string]: any },
-  DetailedHTMLProps<HTMLAttributes<HTMLLIElement>, HTMLLIElement>,
-  any
-> = styled(Flex)(listCss).withComponent('li');
+export const FlexOl: TFlex<HTMLOListElement, ListCss> = styled(Flex)(listCss).withComponent('ol');
+
+export const FlexLi: TFlex<HTMLLIElement, ListCss> = styled(Flex)(listCss).withComponent('li');
