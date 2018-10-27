@@ -48,8 +48,16 @@ const routeConfig = makeRouteConfig(
             getComponent={async () => (await import('../containers/Dashboard')).default}
           />
           <TransformAsyncRoute
+            path="profile"
+            getComponent={async () => (await import('../pages/Profile')).default}
+          />
+          <TransformAsyncRoute
             path="games/new"
             getComponent={async () => (await import('../containers/CreateGame')).default}
+          />
+          <TransformAsyncRoute
+            path="games/:gameId/settings"
+            getComponent={async () => (await import('../pages/Game/Settings')).default}
           />
           <TransformAsyncRoute
             path="games/:gameId"
