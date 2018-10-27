@@ -1,7 +1,7 @@
 import { compose, lifecycle, mapProps } from 'recompose';
 import { connectStore, StoreConnect } from '.';
 import RenderChildren from 'atoms/RenderChildren';
-import { expandDocumentSnapshot } from './util';
+import { expandDocumentSnapshot } from './expandSnapshot';
 import { DocumentSnapshot } from 'types/Firestation';
 import { User } from 'types/User';
 

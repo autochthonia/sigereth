@@ -9,7 +9,7 @@ import {
 import { firestore } from 'firebase';
 import { pick, forEach, isEqual, isFunction, every } from 'lodash';
 import SmartLoader from 'atoms/SmartLoader';
-import { expandDocumentSnapshot, expandQuerySnapshot } from 'store/util';
+import { expandDocumentSnapshot, expandQuerySnapshot } from 'store/expandSnapshot';
 
 type FirestoreQueryable<DataType> =
   | DocumentReference<DataType>
