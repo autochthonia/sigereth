@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { store as firestore } from 'services/firestation';
+import { store as firestore, getUID } from 'services/firestation';
 import { Game } from 'types/Game';
 import { DocumentSnapshotExpanded, QuerySnapshotExpanded } from 'types/Firestation';
 import { User } from 'types/User';
 import firebase from 'firebase';
+import { createFSUserRef } from 'services/fsSelector';
 
 export interface StoreState {
   refs: {
@@ -97,7 +98,19 @@ export default class Store extends Component<StoreProps, StoreState> {
           ...this.state,
           auth,
         }),
-      );
+      )
+      .then(() => {
+        createFSUserRef(getUID())
+          .get()
+          .then(snap => {
+            if (!snap.exists) {
+              firestore
+                .collection('users')
+                .doc(getUID())
+                .set({});
+            }
+          });
+      });
 
   logout = () =>
     firebase
