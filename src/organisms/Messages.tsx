@@ -33,7 +33,7 @@ const MessagesOrganism: SFC<PMessagesOrganism> = ({ messages, sendMessage, playe
         <Message isUser={m.data.sender.isEqual(firestore().doc(`users/${getUID()}`))} key={m.id}>
           {(players.docs &&
             players.docs[m.data.sender.id] &&
-            players.docs[m.data.sender.id].data.name) ||
+            players.docs[m.data.sender.id].data.username) ||
             'unknown player'}
           : {m.data.body}
         </Message>
