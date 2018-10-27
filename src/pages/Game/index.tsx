@@ -43,7 +43,7 @@ class Game extends Component<PGame> {
       // TODO: sanitize message
       body: m,
       createdAt: firestore.FieldValue.serverTimestamp(),
-      sender: firestore().doc(`users/${getUID()}`),
+      sender: this.props.game.ref.collection('players').doc(getUID()),
     } as Message);
   render() {
     const { orderedCombatants, activeCombatant, game, combat, players } = this.props;
