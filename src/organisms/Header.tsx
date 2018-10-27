@@ -3,6 +3,7 @@ import Flex, { TFlex } from 'atoms/Flex';
 import { WithRouter, Link } from 'found';
 import { WithAuthStatus, WithActions } from 'store/HoC';
 import styled from 'react-emotion';
+import { performanceLog } from 'services/log';
 
 const Header: TFlex<HTMLElement> = styled(Flex)({
   background: 'grey',
@@ -22,11 +23,15 @@ const Header: TFlex<HTMLElement> = styled(Flex)({
 }).withComponent('header');
 
 class HeaderView extends Component<WithRouter & WithAuthStatus & WithActions> {
+  onResize = () => {
+    performanceLog.warn('HeaderView onResize');
+    this.forceUpdate();
+  };
   componentDidMount() {
-    window.addEventListener('resize', () => this.forceUpdate());
+    window.addEventListener('resize', this.onResize);
   }
   componentWillUnmount() {
-    window.removeEventListener('resize', () => this.forceUpdate());
+    window.removeEventListener('resize', this.onResize);
   }
   render() {
     console.log('rerender');
