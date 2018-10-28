@@ -4,10 +4,24 @@ import { firestore } from 'firebase';
 import expandSnapshot, { expandDocumentSnapshot, expandQuerySnapshot } from 'store/expandSnapshot';
 import { updateLog, performanceLog } from './log';
 
-function useFirestore<T>(firestoreRef: firestore.DocumentReference<T>): firestore.DocumentSnapshotExpanded<T>;
-function useFirestore<T>(firestoreRef: firestore.CollectionReference<T>): firestore.QuerySnapshotExpanded<T>;
-function useFirestore<T>(firestoreRef: firestore.DocumentReference<T> | firestore.CollectionReference<T>) {
+interface UseFirestoreOptions {
+  subscribe?: boolean;
+}
+
+function useFirestore<T>(
+  firestoreRef: firestore.DocumentReference<T>,
+  options?: UseFirestoreOptions,
+): firestore.DocumentSnapshotExpanded<T>;
+function useFirestore<T>(
+  firestoreRef: firestore.CollectionReference<T>,
+  options?: UseFirestoreOptions,
+): firestore.QuerySnapshotExpanded<T>;
+function useFirestore<T>(
+  firestoreRef: firestore.DocumentReference<T> | firestore.CollectionReference<T>,
+  options?: UseFirestoreOptions,
+) {
   let initialState: firestore.DocumentSnapshotExpanded<T> | firestore.QuerySnapshotExpanded<T>;
+  const { subscribe = false } = options || {};
   if (firestoreRef instanceof firestore.DocumentReference) {
     initialState = expandDocumentSnapshot({
       exists: false,
@@ -35,29 +49,46 @@ function useFirestore<T>(firestoreRef: firestore.DocumentReference<T> | firestor
     () => {
       performanceLog.debug('useFirestore withEffect');
       const effect = (res = () => {}) => {
-        console.warn('hi')
         if (firestoreRef instanceof firestore.DocumentReference) {
-          return firestoreRef.onSnapshot((snap: firestore.DocumentSnapshot<T> | firestore.QueryDocumentSnapshot<T>) => {
-            updateLog.info('useFirestore update');
-            setState(expandSnapshot(snap));
-            res();
-          });
+          return subscribe
+            ? firestoreRef.onSnapshot(
+                (snap: firestore.DocumentSnapshot<T> | firestore.QueryDocumentSnapshot<T>) => {
+                  updateLog.info('useFirestore update');
+                  setState(expandSnapshot(snap));
+                  res();
+                },
+              )
+            : firestoreRef
+                .get()
+                .then(
+                  (snap: firestore.DocumentSnapshot<T> | firestore.QueryDocumentSnapshot<T>) => {
+                    updateLog.info('useFirestore update');
+                    setState(expandSnapshot(snap));
+                    res();
+                  },
+                );
         } else if (firestoreRef instanceof firestore.CollectionReference) {
-          return firestoreRef.onSnapshot((snap: firestore.QuerySnapshot<T>) => {
-            updateLog.info('useFirestore update');
-            setState(expandSnapshot(snap));
-            res();
-          });
+          return subscribe
+            ? firestoreRef['onSnapshot']((snap: firestore.QuerySnapshot<T>) => {
+                updateLog.info('useFirestore update');
+                setState(expandSnapshot(snap));
+                res();
+              })
+            : firestoreRef.get().then((snap: firestore.QuerySnapshot<T>) => {
+                updateLog.info('useFirestore update');
+                setState(expandSnapshot(snap));
+                res();
+              });
         } else {
           console.error('???');
         }
       };
       let loaded: boolean;
       if (firestoreRef instanceof firestore.DocumentReference) {
-        const docState = state as firestore.DocumentSnapshotExpanded<T>
+        const docState = state as firestore.DocumentSnapshotExpanded<T>;
         loaded = docState.data === null;
       } else if (firestoreRef instanceof firestore.CollectionReference) {
-        const queryState = state as firestore.QuerySnapshotExpanded<T>
+        const queryState = state as firestore.QuerySnapshotExpanded<T>;
         loaded = queryState.docs === null;
       } else {
         console.error('???');
@@ -70,7 +101,7 @@ function useFirestore<T>(firestoreRef: firestore.DocumentReference<T> | firestor
         effect();
       }
     },
-    [firestoreRef],
+    [firestoreRef, subscribe],
   );
 
   return state;
