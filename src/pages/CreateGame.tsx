@@ -8,6 +8,7 @@ import { Combat } from 'types/Combat';
 import { WithRouter } from 'found';
 // import { Player, UserRole, Game } from 'types/Game';
 import { createFSUserRef } from 'services/fsSelector';
+import { Game, Player } from 'types/Game';
 
 const Form = Flex.withComponent('form');
 
@@ -22,20 +23,27 @@ class CreateGamePage extends Component<WithRouter> {
           width={400}
           onSubmit={async e => {
             e.preventDefault();
-            const userRef = createFSUserRef(getUID());
-            const gameRef = await firestore()
+            const userRef = createFSUserRef();
+            const gameRef = (await firestore()
               .collection('games')
-              .add({ name: this.state.gameName, turn: 0, owner: userRef as unknown });
+              .add({
+                name: this.state.gameName,
+                turn: 0,
+                owner: userRef,
+              })) as firestore.DocumentReference<Game>;
             await Promise.all([
               gameRef
                 .collection('players')
-                .add({
+                .doc(getUID())
+                .set({
                   username: 'Storyteller',
                   role: 'OWNER',
                   user: userRef,
                 })
-                .then(playerRef => {
-                  gameRef.update({ owner: playerRef });
+                .then(() => {
+                  gameRef.update({
+                    owner: gameRef.collection<Player>('players').doc(getUID()),
+                  });
                 }),
               gameRef
                 .collection('combats')
