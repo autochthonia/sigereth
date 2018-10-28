@@ -4,6 +4,7 @@ declare module 'firebase' {
   namespace firestore {
     export interface Firestore {
       doc<T>(documentPath: string): DocumentReference<T>;
+      collection<T>(collectionPath: string): CollectionReference<T>;
     }
     export interface Query<DataType = firestore.DocumentData> extends FIREBASE.firestore.Query {
       where(
@@ -82,6 +83,7 @@ declare module 'firebase' {
       };
     }
     export interface DocumentReference<DataType = firestore.DocumentData> {
+      update(data: Partial<DataType>): Promise<void>;
       set(data: DataType, options?: firestore.SetOptions): Promise<void>;
       get(options?: firestore.GetOptions): Promise<DocumentSnapshot<DataType>>;
       onSnapshot(observer: {
@@ -112,8 +114,8 @@ declare module 'firebase' {
     }
 
     export interface CollectionReference<DataType = firestore.DocumentData> {
-      add(data: DataType): Promise<DocumentReference>;
-      doc<T>(documentPath?: string): DocumentReference<T>;
+      add(data: DataType): Promise<DocumentReference<DataType>>;
+      doc(documentPath?: string): DocumentReference<DataType>;
     }
     export interface Collection<DataType = firestore.DocumentData> {
       [id: string]: DocumentSnapshotExpanded<DataType>;
