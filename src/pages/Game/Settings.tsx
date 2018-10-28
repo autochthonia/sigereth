@@ -12,7 +12,7 @@ const GameSettingsPage: SFC<WithRouter> = ({
   },
 }) => {
   const gameRef = createFSGameRef(gameId);
-  const game = useFirestore(gameRef);
+  const game = useFirestore(gameRef, { subscribe: true });
   const players = useFirestore(gameRef.collection<Player>('players'));
   if (game.data === null || players.docs === null) {
     return <span>'loading...'</span>;
