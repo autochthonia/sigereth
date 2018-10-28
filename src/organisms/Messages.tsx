@@ -1,7 +1,6 @@
 import Flex from 'atoms/Flex';
 import React, { SFC } from 'react';
 import { map } from 'lodash';
-import { QuerySnapshotExpanded } from 'types/Firestation';
 import { Message, Player } from 'types/Game';
 import styled from 'react-emotion';
 import colors from 'styles/colors';
@@ -20,9 +19,9 @@ const Message = styled(Flex)<{ isUser: boolean }>(({ isUser = false }) => ({
 }));
 
 export interface PMessagesOrganism {
-  messages: QuerySnapshotExpanded<Message>;
+  messages: firestore.QuerySnapshotExpanded<Message>;
   sendMessage: MessagesChatInputProps['sendMessage'];
-  players: QuerySnapshotExpanded<Player>;
+  players: firestore.QuerySnapshotExpanded<Player>;
 }
 
 const MessagesOrganism: SFC<PMessagesOrganism> = ({ messages, sendMessage, players }) => (

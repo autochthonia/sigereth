@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { store as firestore, getUID } from 'services/firestation';
 import { Game } from 'types/Game';
-import { DocumentSnapshotExpanded, QuerySnapshotExpanded } from 'types/Firestation';
 import { User } from 'types/User';
 import firebase from 'firebase';
 import { createFSUserRef } from 'services/fsSelector';
@@ -27,8 +26,8 @@ export interface StoreState {
     login?: () => Promise<void>;
     logout?: () => Promise<void>;
   };
-  games: QuerySnapshotExpanded<Game>;
-  user: DocumentSnapshotExpanded<User>;
+  games: firebase.firestore.QuerySnapshotExpanded<Game>;
+  user: firebase.firestore.DocumentSnapshotExpanded<User>;
 }
 interface StoreProps {
   children: JSX.Element;

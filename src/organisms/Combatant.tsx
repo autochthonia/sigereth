@@ -1,10 +1,10 @@
 import React, { SFC, ChangeEvent } from 'react';
 import Flex, { FlexUl, FlexLi } from 'atoms/Flex';
+import { firestore } from 'firebase';
 import { Combatant } from 'types/Combat';
 import { max } from 'lodash';
 import styled from 'react-emotion';
 import colors from 'styles/colors';
-import { DocumentSnapshotExpanded } from 'types/Firestation';
 import Input from 'atoms/Input';
 import { BackgroundProperty } from 'csstype';
 import OnslaughtIcon from 'icons/Onslaught';
@@ -49,7 +49,7 @@ const Avatar = styled(Flex)(
 );
 
 interface PCombatant {
-  combatant: DocumentSnapshotExpanded<Combatant>;
+  combatant: firestore.DocumentSnapshotExpanded<Combatant>;
   isActive: boolean;
   className?: string;
 }

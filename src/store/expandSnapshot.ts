@@ -1,15 +1,8 @@
-import {
-  DocumentSnapshot,
-  QuerySnapshot,
-  QueryDocumentSnapshot,
-  DocumentSnapshotExpanded,
-  QuerySnapshotExpanded,
-} from 'types/Firestation';
 import { firestore } from 'firebase';
 
 export const expandDocumentSnapshot: (
-  snap: DocumentSnapshot<any> | QueryDocumentSnapshot<any>,
-) => DocumentSnapshotExpanded<any> = snap => ({
+  snap: firestore.DocumentSnapshot<any> | firestore.QueryDocumentSnapshot<any>,
+) => firestore.DocumentSnapshotExpanded<any> = snap => ({
   exists: snap.exists,
   ref: snap.ref,
   id: snap.id,
@@ -18,10 +11,10 @@ export const expandDocumentSnapshot: (
 });
 
 export const expandQuerySnapshot: (
-  snap: QuerySnapshot<any>,
-) => QuerySnapshotExpanded<any> = snap => {
+  snap: firestore.QuerySnapshot<any>,
+) => firestore.QuerySnapshotExpanded<any> = snap => {
   let docs: {
-    [docId: string]: DocumentSnapshotExpanded<any>;
+    [docId: string]: firestore.DocumentSnapshotExpanded<any>;
   } = {};
   snap.docs === null
     ? (docs = null)
@@ -40,11 +33,16 @@ export const expandQuerySnapshot: (
 // function pickCard(x: number): {suit: string; card: number; };
 
 export function expandSnapshot(
-  snap: DocumentSnapshot<any> | QueryDocumentSnapshot<any>,
-): DocumentSnapshotExpanded<any>;
-export function expandSnapshot(snap: QuerySnapshot<any>): QuerySnapshotExpanded<any>;
+  snap: firestore.DocumentSnapshot<any> | firestore.QueryDocumentSnapshot<any>,
+): firestore.DocumentSnapshotExpanded<any>;
+export function expandSnapshot(
+  snap: firestore.QuerySnapshot<any>,
+): firestore.QuerySnapshotExpanded<any>;
 export default function expandSnapshot(
-  snap: DocumentSnapshot<any> | QueryDocumentSnapshot<any> | QuerySnapshot<any>,
+  snap:
+    | firestore.DocumentSnapshot<any>
+    | firestore.QueryDocumentSnapshot<any>
+    | firestore.QuerySnapshot<any>,
 ) {
   if (
     snap instanceof firestore.DocumentSnapshot ||

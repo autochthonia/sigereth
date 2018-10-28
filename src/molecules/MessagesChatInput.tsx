@@ -4,13 +4,13 @@ import withTextEntry, { WithTextEntry } from './withTextEntry';
 import Input from 'atoms/Input';
 import withDisabled, { WithDisabled } from './withDisabled';
 import { compose } from 'recompose';
-import { DocumentReference } from 'types/Firestation';
+import { firestore } from 'firebase';
 
 const Form = Flex.withComponent('form');
 const SubmitButton = Flex.withComponent('input');
 
 export interface MessagesChatInputProps {
-  sendMessage: (value: string) => Promise<DocumentReference>;
+  sendMessage: (value: string) => Promise<firestore.DocumentReference>;
 }
 const MessagesChatInput: SFC<WithTextEntry & WithDisabled & MessagesChatInputProps> = ({
   value,

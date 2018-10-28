@@ -2,12 +2,12 @@ import React from 'react';
 import { FlexOl, FlexLi } from 'atoms/Flex';
 import { Combatant as TCombatant } from 'types/Combat';
 import Combatant from './Combatant';
-import { DocumentSnapshotExpanded } from 'types/Firestation';
 import { css } from 'emotion';
+import { firestore } from 'firebase';
 
 export interface CombatantListProps {
-  combatants: DocumentSnapshotExpanded<TCombatant>[];
-  activeCombatant: DocumentSnapshotExpanded<TCombatant>;
+  combatants: firestore.DocumentSnapshotExpanded<TCombatant>[];
+  activeCombatant: firestore.DocumentSnapshotExpanded<TCombatant>;
 }
 
 const CombatantList = ({ combatants, activeCombatant }: CombatantListProps) => (

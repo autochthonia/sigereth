@@ -2,12 +2,12 @@ import Flex from 'atoms/Flex';
 import { toNumber } from 'lodash';
 import React, { SFC, ChangeEvent } from 'react';
 import { Combatant } from 'types/Combat';
-import { DocumentReference } from 'types/Firestation';
 import { withStateHandlers } from 'recompose';
 import Input from 'atoms/Input';
+import { firestore } from 'firebase';
 
 export interface PAddCombatants {
-  addCombatant: (c: Partial<Combatant>) => Promise<DocumentReference>;
+  addCombatant: (c: Partial<Combatant>) => Promise<firestore.DocumentReference>;
 }
 
 const Form = Flex.withComponent('form');

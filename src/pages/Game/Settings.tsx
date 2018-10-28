@@ -4,7 +4,6 @@ import { WithRouter } from 'found';
 import { createFSGameRef } from 'services/fsSelector';
 import Flex from 'atoms/Flex';
 import Input from 'atoms/Input';
-import { CollectionReference } from 'types/Firestation';
 import { Player } from 'types/Game';
 
 const GameSettingsPage: SFC<WithRouter> = ({
@@ -14,7 +13,7 @@ const GameSettingsPage: SFC<WithRouter> = ({
 }) => {
   const gameRef = createFSGameRef(gameId);
   const game = useFirestore(gameRef);
-  const players = useFirestore(gameRef.collection('players') as CollectionReference<Player>);
+  const players = useFirestore(gameRef.collection<Player>('players'));
   if (game.data === null || players.docs === null) {
     return <span>'loading...'</span>;
   }

@@ -1,20 +1,13 @@
 import React, { Component, ComponentClass, ComponentType } from 'react';
-import {
-  DocumentReference,
-  Query,
-  CollectionReference,
-  DocumentSnapshotExpanded,
-  QuerySnapshotExpanded,
-} from 'types/Firestation';
 import { firestore } from 'firebase';
 import { pick, forEach, isEqual, isFunction, every } from 'lodash';
 import SmartLoader from 'atoms/SmartLoader';
 import { expandDocumentSnapshot, expandQuerySnapshot } from 'store/expandSnapshot';
 
 type FirestoreQueryable<DataType> =
-  | DocumentReference<DataType>
-  | Query<DataType>
-  | CollectionReference<DataType>;
+  | firestore.DocumentReference<DataType>
+  | firestore.Query<DataType>
+  | firestore.CollectionReference<DataType>;
 
 type FirestoryQueryableFunction<DataType, Props> = (
   firestore: firestore.Firestore,
@@ -39,10 +32,12 @@ type FirestoreQueryableExpanded<
     : unknown;
 
 type FirestoreQueryableExpanded1<QE extends FirestoreQueryable<any>> = QE extends
-  | CollectionReference<infer DataType>
-  | Query<infer DataType>
-  ? QuerySnapshotExpanded<DataType>
-  : QE extends DocumentReference<infer DataType> ? DocumentSnapshotExpanded<DataType> : unknown;
+  | firestore.CollectionReference<infer DataType>
+  | firestore.Query<infer DataType>
+  ? firestore.QuerySnapshotExpanded<DataType>
+  : QE extends firestore.DocumentReference<infer DataType>
+    ? firestore.DocumentSnapshotExpanded<DataType>
+    : unknown;
 
 interface WithFirestoreConfig<Props, PL extends keyof Props, Q extends QueryConfig<Props>> {
   /** Object containing the queries to be provided to WrappedComponent.

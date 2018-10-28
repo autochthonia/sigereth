@@ -3,11 +3,6 @@ import Flex from 'atoms/Flex';
 import CombatantList from 'organisms/CombatantList';
 import { Game as IGame, Message, Player } from 'types/Game';
 import { Combat, Combatant } from 'types/Combat';
-import {
-  DocumentSnapshotExpanded,
-  CollectionReference,
-  QuerySnapshotExpanded,
-} from 'types/Firestation';
 import MessagesContainer from 'containers/Game/Messages';
 import AddCombatant from 'organisms/AddCombatant';
 import { PMessagesOrganism } from 'organisms/Messages';
@@ -17,7 +12,7 @@ import GameHeader from 'organisms/GameHeader';
 
 interface CombatInfoProps {
   turn: Combat['turn'];
-  activeCombatant: DocumentSnapshotExpanded<Combatant>;
+  activeCombatant: firestore.DocumentSnapshotExpanded<Combatant>;
 }
 const Article = Flex.withComponent('section');
 const CombatInfo = ({ turn, activeCombatant }: CombatInfoProps) => (
@@ -27,24 +22,22 @@ const CombatInfo = ({ turn, activeCombatant }: CombatInfoProps) => (
 );
 
 interface PGame {
-  game: DocumentSnapshotExpanded<IGame>;
-  combat: DocumentSnapshotExpanded<Combat>;
-  activeCombatant: DocumentSnapshotExpanded<Combatant>;
-  orderedCombatants: DocumentSnapshotExpanded<Combatant>[];
-  players: QuerySnapshotExpanded<Player>;
+  game: firestore.DocumentSnapshotExpanded<IGame>;
+  combat: firestore.DocumentSnapshotExpanded<Combat>;
+  activeCombatant: firestore.DocumentSnapshotExpanded<Combatant>;
+  orderedCombatants: firestore.DocumentSnapshotExpanded<Combatant>[];
+  players: firestore.QuerySnapshotExpanded<Player>;
 }
 
 class Game extends Component<PGame> {
-  messagesRef: CollectionReference<Message> = this.props.game.ref.collection(
-    'messages',
-  ) as CollectionReference<Message>;
+  messagesRef = this.props.game.ref.collection<Message>('messages');
   sendMessage: PMessagesOrganism['sendMessage'] = async m =>
     this.props.game.ref.collection('messages').add({
       // TODO: sanitize message
       body: m,
       createdAt: firestore.FieldValue.serverTimestamp(),
       sender: this.props.game.ref.collection('players').doc(getUID()),
-    } as Message);
+    });
   render() {
     const { orderedCombatants, activeCombatant, game, combat, players } = this.props;
     return (

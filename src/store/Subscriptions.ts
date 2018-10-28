@@ -2,8 +2,8 @@ import { compose, lifecycle, mapProps } from 'recompose';
 import { connectStore, StoreConnect } from '.';
 import RenderChildren from 'atoms/RenderChildren';
 import { expandDocumentSnapshot } from './expandSnapshot';
-import { DocumentSnapshot } from 'types/Firestation';
 import { User } from 'types/User';
+import { firestore } from 'firebase';
 
 export const UserSubscription = compose(
   connectStore(),
@@ -24,7 +24,7 @@ export const UserSubscription = compose(
             console.debug('Subscribing to user');
             return firestore
               .doc(`users/${auth.user.uid}`)
-              .onSnapshot((snap: DocumentSnapshot<User>) => {
+              .onSnapshot((snap: firestore.DocumentSnapshot<User>) => {
                 const state = getState();
                 setState({
                   ...state,

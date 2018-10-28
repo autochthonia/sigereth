@@ -4,14 +4,14 @@ import useFirestore from 'services/useFirestore';
 import { createFSUserRef } from 'services/fsSelector';
 import { getUID } from 'services/firestation';
 import Flex from 'atoms/Flex';
-import { DocumentReference } from 'types/Firestation';
 import { User } from 'types/User';
 import Input from 'atoms/Input';
+import { firestore } from 'firebase';
 
 const ProfilePage = () => {
   const firestoreUserRef = useMemo(() => createFSUserRef(getUID()), [
     getUID(),
-  ]) as DocumentReference<User>;
+  ]) as firestore.DocumentReference<User>;
   const profile = useFirestore(firestoreUserRef);
 
   if (profile.data === null) {

@@ -2,11 +2,11 @@ import React, { SFC } from 'react';
 import Flex from 'atoms/Flex';
 import { map } from 'lodash';
 import { Link } from 'found';
-import { QuerySnapshotExpanded } from 'types/Firestation';
 import { Game } from 'types/Game';
+import { firestore } from 'firebase';
 
 interface PDashboardPage {
-  games: QuerySnapshotExpanded<Game>;
+  games: firestore.QuerySnapshotExpanded<Game>;
 }
 
 const DashboardPage: SFC<PDashboardPage> = ({ games }) => (

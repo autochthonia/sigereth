@@ -3,17 +3,17 @@ import withFirestore from 'services/withFirestore';
 import { WithRouter } from 'found';
 import { orderBy, head, reject } from 'lodash';
 import { withProps, compose } from 'recompose';
-import { DocumentSnapshotExpanded, QuerySnapshotExpanded } from 'types/Firestation';
 import { Game as IGame, Player } from 'types/Game';
 import { Combatant, Combat } from 'types/Combat';
+import { firestore } from 'firebase';
 
 const GameContainer = compose<
   {
-    game: DocumentSnapshotExpanded<IGame>;
-    combat: DocumentSnapshotExpanded<Combat>;
-    players: QuerySnapshotExpanded<Player>;
-    activeCombatant: DocumentSnapshotExpanded<Combatant>;
-    orderedCombatants: DocumentSnapshotExpanded<Combatant>[];
+    game: firestore.DocumentSnapshotExpanded<IGame>;
+    combat: firestore.DocumentSnapshotExpanded<Combat>;
+    players: firestore.QuerySnapshotExpanded<Player>;
+    activeCombatant: firestore.DocumentSnapshotExpanded<Combatant>;
+    orderedCombatants: firestore.DocumentSnapshotExpanded<Combatant>[];
   },
   WithRouter
 >(
@@ -37,10 +37,10 @@ const GameContainer = compose<
   }),
   withProps<
     {
-      activeCombatant: DocumentSnapshotExpanded<Combatant>;
-      orderedCombatants: DocumentSnapshotExpanded<Combatant>[];
+      activeCombatant: firestore.DocumentSnapshotExpanded<Combatant>;
+      orderedCombatants: firestore.DocumentSnapshotExpanded<Combatant>[];
     },
-    { combatants: QuerySnapshotExpanded<Combatant> }
+    { combatants: firestore.QuerySnapshotExpanded<Combatant> }
   >(({ combatants }) => {
     const orderedCombatants = orderBy(combatants.docs, ['data.initiative'], ['desc']);
     return {
