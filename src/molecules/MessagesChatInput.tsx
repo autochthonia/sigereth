@@ -5,6 +5,7 @@ import Input from 'atoms/Input';
 import withDisabled, { WithDisabled } from './withDisabled';
 import { compose } from 'recompose';
 import { firestore } from 'firebase';
+import MessagesRollInput from './MessagesRollInput';
 
 const Form = Flex.withComponent('form');
 const SubmitButton = Flex.withComponent('input');
@@ -19,23 +20,26 @@ const MessagesChatInput: SFC<WithTextEntry & WithDisabled & MessagesChatInputPro
   disabled,
   setDisabled,
 }) => (
-  <Form
-    onSubmit={e => {
-      e.preventDefault();
-      setDisabled(true);
-      sendMessage(value)
-        .then(() => {
-          setDisabled(false);
-          onChange({ target: { value: '' } });
-        })
-        .catch(() => {
-          setDisabled(false);
-        });
-    }}
-  >
-    <Input value={value} onChange={onChange} disabled={disabled} />
-    <SubmitButton type="submit" disabled={disabled} />
-  </Form>
+  <>
+    <MessagesRollInput />
+    <Form
+      onSubmit={e => {
+        e.preventDefault();
+        setDisabled(true);
+        sendMessage(value)
+          .then(() => {
+            setDisabled(false);
+            onChange({ target: { value: '' } });
+          })
+          .catch(() => {
+            setDisabled(false);
+          });
+      }}
+    >
+      <Input value={value} onChange={onChange} disabled={disabled} />
+      <SubmitButton type="submit" disabled={disabled} />
+    </Form>
+  </>
 );
 
 export default compose<WithTextEntry & WithDisabled, MessagesChatInputProps>(
