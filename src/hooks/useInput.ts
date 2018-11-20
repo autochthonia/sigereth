@@ -1,4 +1,3 @@
-// @ts-ignore
 import { ChangeEvent, useState, useCallback } from 'react';
 
 export const useInput = (

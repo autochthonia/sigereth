@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { useMemo, useRef } from 'react';
 import useFirestore from 'services/useFirestore';
 import { createFSUserRef } from 'services/fsSelector';

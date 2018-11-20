@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { useState } from 'react';
 import Flex from 'atoms/Flex';
 import Input from 'atoms/Input';

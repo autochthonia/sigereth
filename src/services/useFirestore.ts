@@ -1,4 +1,3 @@
-// @ts-ignore
 import { useState, useEffect } from 'react';
 import { firestore } from 'firebase';
 import expandSnapshot, { expandDocumentSnapshot, expandQuerySnapshot } from 'store/expandSnapshot';

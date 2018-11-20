@@ -21,7 +21,6 @@ export interface DerivedStats {
   mobilityPenalty: number;
 }
 
-// @ts-ignore
 export const getDerivedStats: (character: Character) => DerivedStats = character => {
   switch (character.characterType) {
     case 'FullCharacter': {
