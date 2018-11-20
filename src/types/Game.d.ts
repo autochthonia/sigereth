@@ -22,6 +22,11 @@ export enum UserRole {
   player = 'PLAYER',
 }
 
+export enum PlayerStatus {
+  invited = 'INVITED',
+  accepted = 'ACCEPTED',
+}
+
 export interface Player {
   username: string;
   user: DocumentReference<User>;
