@@ -10,13 +10,38 @@ import LandingPage from 'pages/Landing';
 import { injectGlobal } from 'emotion';
 import { normalize } from 'polished';
 
-injectGlobal(normalize());
+injectGlobal(normalize(), {
+  'html, body, #root, #container': { height: '100%', width: '100%' },
+  html: {
+    ':after': {
+      filter: 'url(#roughpaper)',
+      content: "''",
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: -999,
+    },
+  },
+});
 const Layout: SFC = ({ children }) => (
-  <div>
-    <HeaderContainer />
-    <main>{children}</main>
-    <footer>footer</footer>
-  </div>
+  <>
+    <div id="container">
+      <HeaderContainer />
+      <main>{children}</main>
+      <footer>footer</footer>
+    </div>
+    <svg style={{ visibility: 'hidden', position: 'absolute', height: 0, width: 0 }}>
+      <filter id="roughpaper" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" result="noise" />
+        <feDiffuseLighting in="noise" result="diffLight" lighting-color="white" surfaceScale="2">
+          <feDistantLight azimuth="50" elevation="58" />
+        </feDiffuseLighting>
+      </filter>
+      <rect x="0" y="0" width="100%" height="100%" filter="url(#roughpaper)" fill="none" />
+    </svg>
+  </>
 );
 
 class AsyncRoute extends Route {
