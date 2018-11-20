@@ -7,8 +7,8 @@ export const useInput = (
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   set: (value: string) => void;
 } => {
-  let [value, setValue] = useState('');
-  let onChange = useCallback(function(e: ChangeEvent<HTMLInputElement>) {
+  const [value, setValue] = useState('');
+  const onChange = useCallback(function(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
   }, []);
 
