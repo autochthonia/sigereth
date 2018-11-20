@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { firestore } from 'firebase';
-import expandSnapshot, { expandDocumentSnapshot, expandQuerySnapshot } from 'store/expandSnapshot';
+import expandSnapshot, {
+  expandDocumentSnapshot,
+  expandQuerySnapshot,
+  DocumentSnapshotExpanded,
+  QuerySnapshotExpanded,
+} from 'store/expandSnapshot';
 import { updateLog, performanceLog } from './log';
 
 interface UseFirestoreOptions {
@@ -10,16 +15,16 @@ interface UseFirestoreOptions {
 function useFirestore<T>(
   firestoreRef: firestore.DocumentReference<T>,
   options?: UseFirestoreOptions,
-): firestore.DocumentSnapshotExpanded<T>;
+): DocumentSnapshotExpanded<T>;
 function useFirestore<T>(
   firestoreRef: firestore.CollectionReference<T>,
   options?: UseFirestoreOptions,
-): firestore.QuerySnapshotExpanded<T>;
+): QuerySnapshotExpanded<T>;
 function useFirestore<T>(
   firestoreRef: firestore.DocumentReference<T> | firestore.CollectionReference<T>,
   options?: UseFirestoreOptions,
 ) {
-  let initialState: firestore.DocumentSnapshotExpanded<T> | firestore.QuerySnapshotExpanded<T>;
+  let initialState: DocumentSnapshotExpanded<T> | QuerySnapshotExpanded<T>;
   const { subscribe = false } = options || {};
   if (firestoreRef instanceof firestore.DocumentReference) {
     initialState = expandDocumentSnapshot({
@@ -28,14 +33,14 @@ function useFirestore<T>(
       id: undefined,
       metadata: null,
       data: (): null => null,
-    } as any) as firestore.DocumentSnapshotExpanded<T>;
+    } as any) as DocumentSnapshotExpanded<T>;
   } else if (firestoreRef instanceof firestore.CollectionReference) {
     initialState = expandQuerySnapshot({
       metadata: null,
       size: 0,
       empty: true,
       docs: null,
-    } as any) as firestore.QuerySnapshotExpanded<T>;
+    } as any) as QuerySnapshotExpanded<T>;
   } else {
     console.error('???');
   }
@@ -84,10 +89,10 @@ function useFirestore<T>(
       };
       let loaded: boolean;
       if (firestoreRef instanceof firestore.DocumentReference) {
-        const docState = state as firestore.DocumentSnapshotExpanded<T>;
+        const docState = state as DocumentSnapshotExpanded<T>;
         loaded = docState.data === null;
       } else if (firestoreRef instanceof firestore.CollectionReference) {
-        const queryState = state as firestore.QuerySnapshotExpanded<T>;
+        const queryState = state as QuerySnapshotExpanded<T>;
         loaded = queryState.docs === null;
       } else {
         console.error('???');

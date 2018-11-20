@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Flex from 'atoms/Flex';
 import Input from 'atoms/Input';
 import { useInput } from 'hooks/useInput';

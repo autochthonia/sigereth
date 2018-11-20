@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import useFirestore from 'services/useFirestore';
 import { createFSUserRef } from 'services/fsSelector';
 import { getUID } from 'services/firestation';

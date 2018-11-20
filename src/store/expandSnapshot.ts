@@ -1,8 +1,24 @@
 import { firestore } from 'firebase';
 
+export interface DocumentSnapshotExpanded<T = firestore.DocumentData> {
+  exists: firestore.DocumentSnapshot['exists'];
+  ref: firestore.DocumentSnapshot['ref'];
+  id: firestore.DocumentSnapshot['id'];
+  metadata: firestore.DocumentSnapshot['metadata'];
+  data: T;
+}
+export interface QuerySnapshotExpanded<T = firestore.DocumentData> {
+  metadata: firestore.QuerySnapshot['metadata'];
+  size: firestore.QuerySnapshot['size'];
+  empty: firestore.QuerySnapshot['empty'];
+  docs: {
+    [docId: string]: DocumentSnapshotExpanded<T>;
+  };
+}
+
 export const expandDocumentSnapshot: (
   snap: firestore.DocumentSnapshot<any> | firestore.QueryDocumentSnapshot<any>,
-) => firestore.DocumentSnapshotExpanded<any> = snap => ({
+) => DocumentSnapshotExpanded<any> = snap => ({
   exists: snap.exists,
   ref: snap.ref,
   id: snap.id,
@@ -12,9 +28,9 @@ export const expandDocumentSnapshot: (
 
 export const expandQuerySnapshot: (
   snap: firestore.QuerySnapshot<any>,
-) => firestore.QuerySnapshotExpanded<any> = snap => {
+) => QuerySnapshotExpanded<any> = snap => {
   let docs: {
-    [docId: string]: firestore.DocumentSnapshotExpanded<any>;
+    [docId: string]: DocumentSnapshotExpanded<any>;
   } = {};
   snap.docs === null
     ? (docs = null)
@@ -29,15 +45,10 @@ export const expandQuerySnapshot: (
   };
 };
 
-// function pickCard(x: {suit: string; card: number; }[]): number;
-// function pickCard(x: number): {suit: string; card: number; };
-
 export function expandSnapshot(
   snap: firestore.DocumentSnapshot<any> | firestore.QueryDocumentSnapshot<any>,
-): firestore.DocumentSnapshotExpanded<any>;
-export function expandSnapshot(
-  snap: firestore.QuerySnapshot<any>,
-): firestore.QuerySnapshotExpanded<any>;
+): DocumentSnapshotExpanded<any>;
+export function expandSnapshot(snap: firestore.QuerySnapshot<any>): QuerySnapshotExpanded<any>;
 export default function expandSnapshot(
   snap:
     | firestore.DocumentSnapshot<any>

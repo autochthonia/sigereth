@@ -1,21 +1,35 @@
 import * as FIREBASE from 'firebase';
+import {
+  DocumentSnapshotExpanded as DocumentSnapshotExpanded2,
+  QuerySnapshotExpanded as QuerySnapshotExpanded2,
+} from 'store/expandSnapshot';
 
 declare module 'firebase' {
   namespace firestore {
+    export interface Firestore {
+      doc<T>(documentPath: string): DocumentReference<T>;
+    }
     // Snapshots
     export interface DocumentSnapshot<T = DocumentData> {
-      data(options?: SnapshotOptions): D | undefined;
+      data<T>(options?: SnapshotOptions): T | undefined;
     }
     export interface QueryDocumentSnapshot<T = DocumentData> extends DocumentSnapshot {
       data(options?: SnapshotOptions): T;
     }
+
+    export type DocumentSnapshotExpanded<any> = DocumentSnapshotExpanded2<any>;
+    export type QuerySnapshotExpanded<any> = QuerySnapshotExpanded2<any>;
+
     export interface QuerySnapshot<T = DocumentData> {
       readonly docs: QueryDocumentSnapshot<T>[];
       forEach(callback: (result: QueryDocumentSnapshot<T>) => void, thisArg?: any): void;
     }
 
     // References + Queries
-    export interface DocumentReference<T = DocumentData> {
+    export interface DocumentReference<T extends DataType = DocumentData> {
+      collection<T>(collectionPath: string): CollectionReference<T>;
+      get(options?: GetOptions): Promise<DocumentSnapshot<T>>;
+
       onSnapshot(observer: {
         next?: (snapshot: DocumentSnapshot<T>) => void;
         error?: (error: FirestoreError) => void;
