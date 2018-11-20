@@ -1,13 +1,13 @@
 import { ChangeEvent, useState, useCallback } from 'react';
 
 export const useInput = (
-  initialValue: string = '',
+  // initialValue: string = '',
 ): {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   set: (value: string) => void;
 } => {
-  let [value, setValue] = useState(initialValue);
+  let [value, setValue] = useState('');
   let onChange = useCallback(function(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
   }, []);
