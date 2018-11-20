@@ -2,13 +2,7 @@ import { StandardLonghandProperties, StandardShorthandProperties } from 'csstype
 // @ts-ignore
 import { all as cssProperties } from 'known-css-properties';
 import { isObject } from 'lodash';
-import logFactory from 'modules/util/logFactory';
 import { mapValuesAndKeys } from './util';
-
-const log = logFactory.getLogger('css');
-if (process.env.NODE_ENV === 'production') {
-  log.setDefaultLevel('error');
-}
 
 // Setup for our media breakpoints. Will move once system is built out a bit more
 export interface MqObject<T> {
@@ -44,7 +38,7 @@ export const transformCss = (key: string, value: any) => {
   if (!cssPropertiesNoDashes.includes(key.toLowerCase())) {
     // If we don't expect the key to be filtered, print out a warning
     if (!['theme', 'children', 'onClick', 'href'].includes(key)) {
-      log.warn(`transformCss has ignored unknown property: '${key}'`);
+      console.warn(`transformCss has ignored unknown property: '${key}'`);
     }
     return undefined;
   }
